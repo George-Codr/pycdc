@@ -9,21 +9,27 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake git
+        choco install -y cmake
+        choco install -y make
+        choco install -y git
+        choco install -y visualstudio2019buildtools
+        choco install -y visualstudio2019-workload-vctools
+      shell: powershell
 
     - name: Build with CMake and Make
       run: |
         cmake .
-        make
+        cmake --build . --config Release
+      shell: powershell
 
     - name: Run tests
       run: |
-        make check
+        ctest -C Release
+      shell: powershell
